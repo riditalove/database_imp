@@ -1,0 +1,291 @@
+create database school; ---> for creating a database
+
+create database temp1;
+drop database temp1;------> for deleting a database
+
+use school; ---> we are currently using school database
+
+-----creating a table in student database-------
+
+create table student(
+
+ id int primary key,
+ name varchar(50),
+ age int not null
+);
+
+--------inserting values in a table--------
+
+insert into student(id,name,age) values (1,"ridita",24);
+
+
+-----best practice-------
+create database if not exists school;
+
+drop database if exists ridi;
+
+-------showing databases and tables----
+
+show databases;
+show tables;
+
+1. primary key should not be null
+2. It should be unique
+3. foerign key is basically primary key of the other table
+4. A table can have multiple foreign keys,foreign keys can be null,and duplicate
+
+---unique keyword-------
+
+create table temp2
+( id int unique
+);
+
+insert into temp2(id) values (1),(1),(2); ----------> it will give an error
+
+------another way of declaring primary key-----
+
+create table temp3(
+id int,
+city varchar(50),
+name varchar(50),
+primary key (id,name)
+);
+
+------default------
+
+create table salary
+( id int,
+salary int default=25000
+);
+
+insert into salary(id) values (1),(2),(3);
+
+------------check--------
+
+create table voter
+(
+id int primary key,
+name varchar(50),
+age int check (age>=18 and age<=100)
+);
+
+----------select---------
+
+select col1,col2 from table_name;
+
+create table if not exists student(
+rollno int primary key,
+name varchar(50),
+marks int not null,
+grade varchar(1),
+city varchar(20)
+);
+
+insert into student(rollno,name,marks,grade,city) values(101,"anil",78,"C","Pune"),(102,"bhumika",93,"A","Mumbai"),
+(103,"chetan",85,"B","Mumbai"),(104,"Druv",96,"A","Delhi"),(105,"Emanuel",12,"F","Delhi"),(106,"Farah",82,"B","Delhi");
+
+-------distinct------
+select distint city from student;
+
+--------between,in,limit,order by-----
+
+1. In is used before the list
+
+select* from student where city in ("Delhi","Mumbai");
+
+select* from student where marks between 80 and 90;
+
+select* from student where marks>70 limit 3;
+
+select* from student order by marks asc;
+
+----find the highest 3 marks of students--------
+
+select* from student order by marks desc limit 3;
+
+-----------aggregate function------
+min(),max(),count(),sum(),avg().. aggregate functions are used with select statement normally
+
+
+
+
+
+-----find out all of the detail of the 2nd highest scorer of the table-------
+select* from student where marks=(select max(marks) from student where marks<(select max(marks) from student)) ;
+
+------find out all of the detail of above average students------
+
+--------find out the count of students who gain 80+ marks------
+select count(rollno) from student where marks>80;
+
+
+-------group by works with aggregate functions-----------
+select count(rollno),avg(marks) from student group by(city) order by avg(marks) asc;
+
+
+-------having----------------
+having is used when "where: can't be used
+where is used on row, having is used on colomn
+
+1. find out the count of studetns of each city whose number is above 90
+select city, count(rollno) from student where marks>90 group by(city);
+
+
+--------------order of the keywords--------
+
+select col_name
+from table_name
+where condition
+group by
+having
+order by desc/asc
+limit
+
+
+----find out the count of the students of each city which has maximum marks above 70 and the students have above marks of 10
+
+select city,count(rollno) from student where marks>10 group by(city) having maxz(marks)>70;
+
+
+---------Update------------
+
+to get out of the sql safe mode , we have to type = set sql_safe_updates=0;
+
+update student set grade="O" where grade="A";
+
+increase all the students' marks by 1----------> update student set marks=marks+1;
+
+------------Delete----------
+delete from student where name="Fania";
+
+
+----------Foreign key cascading things---------
+
+create table teacher(
+id int primary key,
+
+);
+
+--------------ALTER______________
+
+alter table student
+add column age int not null default 19;
+
+alter table student
+change column int stu_age int;
+
+alter table student
+modify column stu_age varchar(10);
+
+alter table student
+drop column stu_age;
+
+alter table student
+rename to stu;
+
+--------to delete all of the data in the table----------
+
+truncate table student;
+
+------------join-------------------
+
+selet*
+from table1 (left side er table)
+inner join table2 (right side er table)
+on table1.common_parameter = table2.common_parameter;
+
+------if you want you left side of table shown full-----
+
+select*
+from left_table
+left join right_table
+on condition;
+
+-------if you want you right side of table shown full-----
+
+select*
+from left table
+right join right table
+on condition;
+
+---------FULL UNION___________
+
+select*
+from left_table
+left join right_table
+on condition;
+union
+select*
+from left table
+right join right table
+on condition;
+
+----------Exclusive left join------
+
+select*
+from left_table
+left join right_table
+on left_table.common_attritbute = right_table.common_attritbute
+where right_table.common_attritbute is null
+
+
+-----------Exclusive right join---------
+select*
+from left_table
+right join right_table
+on left_table.common_attritbute = right_table.common_attritbute
+where left_table.common_attritbute is null
+
+
+----------self join--------
+
+select a.name as underdoer,b.name as manager
+from left_table as a
+join right_table as b
+on a.common_attribute = b.common atrribute;
+
+------selecting unique but common rows from the union of two tables-------
+select* from employee
+union 
+select* from employee
+
+-----selecting all common rows from the union of two tables-------
+select* from employee
+union all
+select* from employee
+
+####################################### SUB QUERIES ####################################
+
+we can use the queries in
+1. select
+2. from
+3. where
+
+----names of all students who scored more than average----------
+
+select* from student where salary>(select avg(marks) from student);
+
+--------find all the names of student where the roll number is even---------------
+
+select* from student where rollno%2=0;
+
+-------find the details of maximum marks holder student at Delhi---------
+
+select* from student where marks=(select max(marks) from student where city="Delhi") and city="Delhi";
+
+
+
+#############view###########################
+
+virtual table of the database
+
+
+create view view1 as
+select rollno,full_name,marks from student; -------> so the view will only have the rollno,full_name,marks of the student table
+
+select* from view1
+where marks>90;
+
+drop view view1;
+
+

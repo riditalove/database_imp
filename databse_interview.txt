@@ -1,3 +1,6 @@
+CHAR is fixed, but VARCHAR is flexible
+suppose, you write CHAR(50) : it will take 50 size in storage. pune, it takes only 4 bytes in memory, but if you assign its datatype char, then it will take 50 bytes. rest 46 bytes will be wasted. But in varchar, it will take as much space as needed, no more, no less. If it's PUNE, then it will take 4 bytes, will not take 50 even if you weitr VARCHAR(50)
+
 create database school; ---> for creating a database
 
 create database temp1;
